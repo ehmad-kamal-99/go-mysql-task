@@ -32,6 +32,7 @@ func FindCsv() {
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("# To exit the program type 'exit'")
+	fmt.Println("File Structure: first_name, last_name, age, blood_group")
 	fmt.Println("Enter the file path to search for csv:")
 
 	dir, _ := reader.ReadString('\n')
@@ -93,7 +94,15 @@ func ReadCsvFile(file string) {
 		user.Age, _ = strconv.Atoi(record[2])
 		user.BloodGroup = record[3]
 
-		InsertToDb(user)
+		if user.FirstName != "" && user.LastName != "" || user.Age != 0 || user.BloodGroup != "" {
+			InsertToDb(user)
+		} else {
+			fmt.Println("File not compatible for storage into database.")
+			fmt.Println("Try another file or set the structure of file to: ")
+			fmt.Println("first_name, last_name, age, blood_group")
+			fmt.Println("Exiting")
+			os.Exit(1)
+		}
 	}
 }
 
