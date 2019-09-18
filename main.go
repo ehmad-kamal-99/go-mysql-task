@@ -88,13 +88,17 @@ func ReadCsvFile(file string) {
 			panic(err)
 		}
 
-		user := new(User)
-		user.FirstName = record[0]
-		user.LastName = record[1]
-		user.Age, _ = strconv.Atoi(record[2])
-		user.BloodGroup = record[3]
+		age, err := strconv.Atoi(record[2])
+		if err == nil {
+			panic(err)
+		}
 
-		if user.FirstName != "" && user.LastName != "" || user.Age != 0 || user.BloodGroup != "" {
+		if record[0] != "" && record[1] != "" && age != 0 && record[3] != "" {
+			user := new(User)
+			user.FirstName = record[0]
+			user.LastName = record[1]
+			user.Age = age
+			user.BloodGroup = record[3]
 			InsertToDb(user)
 		} else {
 			fmt.Println("File not compatible for storage into database.")
