@@ -89,7 +89,7 @@ func ReadCsvFile(file string) {
 		}
 
 		age, err := strconv.Atoi(record[2])
-		if err == nil {
+		if err != nil {
 			panic(err)
 		}
 
