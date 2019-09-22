@@ -29,6 +29,8 @@ func main() {
 // FindCsv file in a directory
 func FindCsv() {
 	var root string
+	var counter int8
+	counter = 0
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("# To exit the program type 'exit'")
@@ -49,23 +51,24 @@ func FindCsv() {
 
 		for _, file := range files {
 			if filepath.Ext(file) == ".csv" {
-				fmt.Println("File found at: " + filepath.Base(file))
+				counter++
+				fmt.Println("File found at: " + filepath.Dir(file))
 				ReadCsvFile(filepath.Clean(file))
-			} else if filepath.Ext(file) != ".csv" {
+			}
+		}
 
-			} else {
-				fmt.Println("No file found.")
-				reader := bufio.NewReader(os.Stdin)
-				fmt.Println("Try again? [y/n]")
+		if counter == 0 {
+			fmt.Println("No file found.")
+			reader := bufio.NewReader(os.Stdin)
+			fmt.Println("Try again? [y/n]")
 
-				answer, _ := reader.ReadString('\n')
-				ans := strings.TrimRight(answer, "\r\n")
+			answer, _ := reader.ReadString('\n')
+			ans := strings.TrimRight(answer, "\r\n")
 
-				if ans == "y" || ans == "Y" {
-					FindCsv()
-				} else if ans == "n" || ans == "N" {
-					os.Exit(1)
-				}
+			if ans == "y" || ans == "Y" {
+				FindCsv()
+			} else if ans == "n" || ans == "N" {
+				os.Exit(1)
 			}
 		}
 	}
@@ -73,6 +76,8 @@ func FindCsv() {
 
 // ReadCsvFile function that reads csv files
 func ReadCsvFile(file string) {
+
+	fmt.Println("Hello World!")
 
 	f, _ := os.Open(file)
 	r := csv.NewReader(f)
@@ -89,7 +94,7 @@ func ReadCsvFile(file string) {
 		}
 
 		age, err := strconv.Atoi(record[2])
-		if err == nil {
+		if err != nil {
 			panic(err)
 		}
 
@@ -122,9 +127,9 @@ func InsertToDb(user *User) {
 	defer db.Close()
 
 	sqlstatement := `
-	INSERT INTO user (firstname, lastname, age, bloodgroup)
-	VALUES (?, ?, ?, ?)
-	`
+			INSERT INTO user (firstname, lastname, age, bloodgroup)
+			VALUES (?, ?, ?, ?)
+			`
 
 	_, err = db.Exec(sqlstatement, user.FirstName, user.LastName, user.Age, user.BloodGroup)
 
